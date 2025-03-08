@@ -39,7 +39,7 @@
             "symfony/runtime": true
         },
         "bump-after-update": true,
-        "sort-packages": true
+        "sort-packages": true,
     },
     "autoload": {
         "psr-4": {
@@ -71,7 +71,8 @@
         ],
         "post-update-cmd": [
             "@auto-scripts"
-        ]
+        ],
+        "start": ["Composer\\Config::disableProcessTimeout", "symfony serve"]
     },
     "conflict": {
         "symfony/symfony": "*"
