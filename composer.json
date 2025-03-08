@@ -72,7 +72,10 @@
         "post-update-cmd": [
             "@auto-scripts"
         ],
-        "start": ["Composer\\Config::disableProcessTimeout", "symfony serve"]
+        "start": ["Composer\\Config::disableProcessTimeout", "symfony serve"],
+        "test:cs": "php-cs-fixer fix --dry-run",
+        "fix:cs": "php-cs-fixer fix",
+        "test": ["@test:cs", "@fix:cs"]
     },
     "conflict": {
         "symfony/symfony": "*"
@@ -82,5 +85,8 @@
             "allow-contrib": false,
             "require": "7.2.*"
         }
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.68"
     }
 }
