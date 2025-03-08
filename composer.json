@@ -77,6 +77,10 @@
         "fix:cs": "php-cs-fixer fix",
         "test": ["@test:cs", "@fix:cs"]
     },
+    "scripts-descriptions": {
+        "start": "Lance le serveur sans limite de temps",
+        "test" : "Lance les tests cs-fixer"
+    },
     "conflict": {
         "symfony/symfony": "*"
     },
