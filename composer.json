@@ -79,7 +79,7 @@
     },
     "scripts-descriptions": {
         "start": "Lance le serveur sans limite de temps",
-        "test" : "Lance les tests cs-fixer"
+        "test" : "Lance les tests cs-fixer et corrige la syntaxe"
     },
     "conflict": {
         "symfony/symfony": "*"
