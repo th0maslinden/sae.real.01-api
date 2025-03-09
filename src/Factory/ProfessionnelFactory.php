@@ -62,32 +62,32 @@ final class ProfessionnelFactory extends PersistentProxyObjectFactory
     protected function defaults(): array|callable
     {
         $specialitesReeducation = [
-            "Rhumatologue",
-            "Neurologue",
-            "Cardiologue",
-            "Pneumologue",
-            "Kinésithérapeute",
-            "Orthopédiste",
-            "Médecin de réadaptation",
-            "Gériatre",
-            "Pédiatre",
-            "Chirurgien orthopédiste",
-            "Neurochirurgien",
-            "Médecin de la douleur",
-            "Oncologue",
-            "Endocrinologue",
-            "Psychiatre",
-            "Orthophoniste",
-            "Ergothérapeute",
-            "Podologue",
-            "Médecin du sport",
-            "Médecin généraliste"
+            'Rhumatologue',
+            'Neurologue',
+            'Cardiologue',
+            'Pneumologue',
+            'Kinésithérapeute',
+            'Orthopédiste',
+            'Médecin de réadaptation',
+            'Gériatre',
+            'Pédiatre',
+            'Chirurgien orthopédiste',
+            'Neurochirurgien',
+            'Médecin de la douleur',
+            'Oncologue',
+            'Endocrinologue',
+            'Psychiatre',
+            'Orthophoniste',
+            'Ergothérapeute',
+            'Podologue',
+            'Médecin du sport',
+            'Médecin généraliste',
         ];
         $firstName = self::faker()->firstName();
         $lastName = self::faker()->lastName();
         $normalizedLastName = $this->normalizeName($lastName);
         $normalizedFirstName = $this->normalizeName($firstName);
-        $login = strtolower($normalizedFirstName) . '.' . strtolower($normalizedLastName) . self::faker()->numberBetween(001, 999);
+        $login = strtolower($normalizedFirstName).'.'.strtolower($normalizedLastName).self::faker()->numberBetween(001, 999);
         $speciality = self::faker()->randomElement($specialitesReeducation);
 
         return [

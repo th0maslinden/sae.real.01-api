@@ -31,7 +31,6 @@ final class RessourceFactory extends PersistentProxyObjectFactory
      */
     protected function defaults(): array|callable
     {
-
         $ressources = [
             'Tapis de course' => 'Équipement cardiovasculaire',
             'Vélo stationnaire' => 'Équipement cardiovasculaire',
@@ -52,7 +51,7 @@ final class RessourceFactory extends PersistentProxyObjectFactory
             'Service de transport adapté' => 'Service de logistique pour patients',
             'Fauteuils roulants' => 'Équipement de mobilité',
             'Déambulateurs' => 'Aide à la marche',
-            'Orthèses et attelles' => 'Dispositifs de soutien articulaire'
+            'Orthèses et attelles' => 'Dispositifs de soutien articulaire',
         ];
 
         $nom = array_rand($ressources);

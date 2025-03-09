@@ -2,9 +2,9 @@
 
 namespace App\DataFixtures;
 
+use App\Factory\RessourceFactory;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
-use App\Factory\RessourceFactory;
 
 class RessourceFixtures extends Fixture
 {

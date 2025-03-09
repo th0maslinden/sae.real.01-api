@@ -62,38 +62,38 @@ final class PatientFactory extends PersistentProxyObjectFactory
     protected function defaults(): array|callable
     {
         $pathologies = [
-            "Arthrose",
-            "Spondylarthrite ankylosante",
-            "Syndrome du canal carpien",
-            "Tendinopathies",
-            "Sclérose en plaques",
-            "Maladie de Parkinson",
-            "Syndrome de Guillain-Barré",
-            "Paralysie faciale",
-            "Rééducation post-infarctus",
-            "Insuffisance cardiaque",
-            "Artérite oblitérante des membres inférieurs",
-            "Broncho-pneumopathie chronique obstructive (BPCO)",
-            "Fibrose pulmonaire",
+            'Arthrose',
+            'Spondylarthrite ankylosante',
+            'Syndrome du canal carpien',
+            'Tendinopathies',
+            'Sclérose en plaques',
+            'Maladie de Parkinson',
+            'Syndrome de Guillain-Barré',
+            'Paralysie faciale',
+            'Rééducation post-infarctus',
+            'Insuffisance cardiaque',
+            'Artérite oblitérante des membres inférieurs',
+            'Broncho-pneumopathie chronique obstructive (BPCO)',
+            'Fibrose pulmonaire',
             "Syndrome d'apnées du sommeil",
-            "Polyarthrite rhumatoïde",
-            "Lupus érythémateux disséminé",
-            "Fibromyalgie",
-            "Rééducation après chirurgie de la hanche ou du genou",
-            "Rééducation après chirurgie du rachis",
-            "Paralysie cérébrale",
-            "Scoliose idiopathique",
-            "Syndrome de pied bot",
-            "Ostéoporose avec fractures",
+            'Polyarthrite rhumatoïde',
+            'Lupus érythémateux disséminé',
+            'Fibromyalgie',
+            'Rééducation après chirurgie de la hanche ou du genou',
+            'Rééducation après chirurgie du rachis',
+            'Paralysie cérébrale',
+            'Scoliose idiopathique',
+            'Syndrome de pied bot',
+            'Ostéoporose avec fractures',
             "Syndrome de déconditionnement à l'effort",
-            "Neuropathies diabétiques",
-            "Syndrome du défilé thoracique",
-            "Algoneurodystrophie",
-            "Syndrome douloureux régional complexe",
-            "Syndrome post-commotionnel",
-            "Rééducation après traumatisme crânien sévère",
-            "Rééducation post-cancer du sein",
-            "Rééducation après chirurgie pour tumeur cérébrale"
+            'Neuropathies diabétiques',
+            'Syndrome du défilé thoracique',
+            'Algoneurodystrophie',
+            'Syndrome douloureux régional complexe',
+            'Syndrome post-commotionnel',
+            'Rééducation après traumatisme crânien sévère',
+            'Rééducation post-cancer du sein',
+            'Rééducation après chirurgie pour tumeur cérébrale',
         ];
 
         $firstName = self::faker()->firstName();
@@ -111,9 +111,7 @@ final class PatientFactory extends PersistentProxyObjectFactory
         ];
     }
 
-    /**
+    /*
      * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#initialization
      */
-
 }
-

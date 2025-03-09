@@ -91,6 +91,6 @@ final class SeanceFactory extends PersistentProxyObjectFactory
     {
         return $this
             // ->afterInstantiate(function(Seance $seance): void {})
-            ;
+        ;
     }
 }
