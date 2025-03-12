@@ -2,42 +2,22 @@
 
 namespace App\Factory;
 
+use AllowDynamicProperties;
 use App\Entity\Patient;
+use App\Entity\User;
 use App\Repository\PatientRepository;
 use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
 use Zenstruck\Foundry\Persistence\Proxy;
 use Zenstruck\Foundry\Persistence\ProxyRepositoryDecorator;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-/**
- * @extends PersistentProxyObjectFactory<Patient>
- *
- * @method        Patient|Proxy                              create(array|callable $attributes = [])
- * @method static Patient|Proxy                              createOne(array $attributes = [])
- * @method static Patient|Proxy                              find(object|array|mixed $criteria)
- * @method static Patient|Proxy                              findOrCreate(array $attributes)
- * @method static Patient|Proxy                              first(string $sortedField = 'id')
- * @method static Patient|Proxy                              last(string $sortedField = 'id')
- * @method static Patient|Proxy                              random(array $attributes = [])
- * @method static Patient|Proxy                              randomOrCreate(array $attributes = [])
- * @method static PatientRepository|ProxyRepositoryDecorator repository()
- * @method static Patient[]|Proxy[]                          all()
- * @method static Patient[]|Proxy[]                          createMany(int $number, array|callable $attributes = [])
- * @method static Patient[]|Proxy[]                          createSequence(iterable|callable $sequence)
- * @method static Patient[]|Proxy[]                          findBy(array $attributes)
- * @method static Patient[]|Proxy[]                          randomRange(int $min, int $max, array $attributes = [])
- * @method static Patient[]|Proxy[]                          randomSet(int $number, array $attributes = [])
- */
-final class PatientFactory extends PersistentProxyObjectFactory
+#[AllowDynamicProperties] final class PatientFactory extends PersistentProxyObjectFactory
 {
-    /**
-     * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#factories-as-services
-     *
-     * @todo inject services if required
-     */
-    protected $transliterator;
+    private UserPasswordHasherInterface $passwordHasher;
 
-    public function __construct()
+    public function __construct(UserPasswordHasherInterface $passwordHasher)
     {
+        $this->passwordHasher = $passwordHasher;
         $this->transliterator = \Transliterator::create('Latin-ASCII');
     }
 
@@ -51,14 +31,9 @@ final class PatientFactory extends PersistentProxyObjectFactory
         $normalized = $this->transliterator->transliterate($name);
         $normalized = preg_replace('/[^a-zA-Z0-9]+/', '-', $normalized);
 
-        return strtolower($normalized);
+        return $normalized;
     }
 
-    /**
-     * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#model-factories
-     *
-     * @todo add your default values here
-     */
     protected function defaults(): array|callable
     {
         $pathologies = [
@@ -100,18 +75,17 @@ final class PatientFactory extends PersistentProxyObjectFactory
         $lastName = self::faker()->lastName();
         $normalizedFirstname = $this->normalizeName($firstName);
         $normalizedLastname = $this->normalizeName($lastName);
-        $login = strtolower($normalizedFirstname).'.'.strtolower($normalizedLastname).self::faker()->numberBetween(001, 999);
-        $pathology = self::faker()->randomElement($pathologies);
+        $login = strtolower($normalizedFirstname).'.'.strtolower($normalizedLastname).self::faker()->numberBetween(1, 999);
+        $password = 'password123';
 
         return [
             'login' => $login,
             'nom' => $normalizedLastname,
             'prenom' => $normalizedFirstname,
-            'pathologie' => $pathology,
+            'pathologie' => self::faker()->randomElement($pathologies),
+            'password' => $this->passwordHasher->hashPassword(new User(), $password),
+            'roles' => ['ROLE_PATIENT'],
+            'email' => "$login@example.com",
         ];
     }
-
-    /*
-     * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#initialization
-     */
 }

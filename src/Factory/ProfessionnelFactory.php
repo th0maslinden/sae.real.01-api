@@ -2,42 +2,22 @@
 
 namespace App\Factory;
 
+use AllowDynamicProperties;
 use App\Entity\Professionnel;
+use App\Entity\User;
 use App\Repository\ProfessionnelRepository;
 use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
 use Zenstruck\Foundry\Persistence\Proxy;
 use Zenstruck\Foundry\Persistence\ProxyRepositoryDecorator;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-/**
- * @extends PersistentProxyObjectFactory<Professionnel>
- *
- * @method        Professionnel|Proxy                              create(array|callable $attributes = [])
- * @method static Professionnel|Proxy                              createOne(array $attributes = [])
- * @method static Professionnel|Proxy                              find(object|array|mixed $criteria)
- * @method static Professionnel|Proxy                              findOrCreate(array $attributes)
- * @method static Professionnel|Proxy                              first(string $sortedField = 'id')
- * @method static Professionnel|Proxy                              last(string $sortedField = 'id')
- * @method static Professionnel|Proxy                              random(array $attributes = [])
- * @method static Professionnel|Proxy                              randomOrCreate(array $attributes = [])
- * @method static ProfessionnelRepository|ProxyRepositoryDecorator repository()
- * @method static Professionnel[]|Proxy[]                          all()
- * @method static Professionnel[]|Proxy[]                          createMany(int $number, array|callable $attributes = [])
- * @method static Professionnel[]|Proxy[]                          createSequence(iterable|callable $sequence)
- * @method static Professionnel[]|Proxy[]                          findBy(array $attributes)
- * @method static Professionnel[]|Proxy[]                          randomRange(int $min, int $max, array $attributes = [])
- * @method static Professionnel[]|Proxy[]                          randomSet(int $number, array $attributes = [])
- */
-final class ProfessionnelFactory extends PersistentProxyObjectFactory
+#[AllowDynamicProperties] final class ProfessionnelFactory extends PersistentProxyObjectFactory
 {
-    /**
-     * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#factories-as-services
-     *
-     * @todo inject services if required
-     */
-    protected $transliterator;
+    private UserPasswordHasherInterface $passwordHasher;
 
-    public function __construct()
+    public function __construct(UserPasswordHasherInterface $passwordHasher)
     {
+        $this->passwordHasher = $passwordHasher;
         $this->transliterator = \Transliterator::create('Latin-ASCII');
     }
 
@@ -51,14 +31,9 @@ final class ProfessionnelFactory extends PersistentProxyObjectFactory
         $normalized = $this->transliterator->transliterate($name);
         $normalized = preg_replace('/[^a-zA-Z0-9]+/', '-', $normalized);
 
-        return strtolower($normalized);
+        return $normalized;
     }
 
-    /**
-     * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#model-factories
-     *
-     * @todo add your default values here
-     */
     protected function defaults(): array|callable
     {
         $specialitesReeducation = [
@@ -83,18 +58,22 @@ final class ProfessionnelFactory extends PersistentProxyObjectFactory
             'Médecin du sport',
             'Médecin généraliste',
         ];
+
         $firstName = self::faker()->firstName();
         $lastName = self::faker()->lastName();
-        $normalizedLastName = $this->normalizeName($lastName);
-        $normalizedFirstName = $this->normalizeName($firstName);
-        $login = strtolower($normalizedFirstName).'.'.strtolower($normalizedLastName).self::faker()->numberBetween(001, 999);
-        $speciality = self::faker()->randomElement($specialitesReeducation);
+        $normalizedFirstname = $this->normalizeName($firstName);
+        $normalizedLastname = $this->normalizeName($lastName);
+        $login = strtolower($normalizedFirstname).'.'.strtolower($normalizedLastname).self::faker()->numberBetween(1, 999);
+        $password = 'password123';
 
         return [
             'login' => $login,
-            'nom' => $normalizedLastName,
-            'prenom' => $normalizedFirstName,
-            'specialite' => $speciality,
+            'nom' => $normalizedLastname,
+            'prenom' => $normalizedFirstname,
+            'specialite' => self::faker()->randomElement($specialitesReeducation),
+            'password' => $this->passwordHasher->hashPassword(new User(), $password),
+            'roles' => ['ROLE_PROFESSIONNEL'],
+            'email' => "$login@example.com",
         ];
     }
 }
