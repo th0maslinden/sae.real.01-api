@@ -10,13 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PatientRepository::class)]
 #[ApiResource]
-class Patient
+class Patient extends User
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
-
     #[ORM\Column(length: 40)]
     private ?string $nom = null;
 
@@ -25,9 +20,6 @@ class Patient
 
     #[ORM\Column(length: 100, nullable: true)]
     private ?string $pathologie = null;
-
-    #[ORM\Column(length: 30)]
-    private ?string $login = null;
 
     /**
      * @var Collection<int, Seance>
@@ -40,11 +32,6 @@ class Patient
         $this->seances = new ArrayCollection();
     }
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
     public function getNom(): ?string
     {
         return $this->nom;
@@ -53,7 +40,6 @@ class Patient
     public function setNom(string $nom): static
     {
         $this->nom = $nom;
-
         return $this;
     }
 
@@ -65,7 +51,6 @@ class Patient
     public function setPrenom(string $prenom): static
     {
         $this->prenom = $prenom;
-
         return $this;
     }
 
@@ -77,25 +62,9 @@ class Patient
     public function setPathologie(?string $pathologie): static
     {
         $this->pathologie = $pathologie;
-
         return $this;
     }
 
-    public function getLogin(): ?string
-    {
-        return $this->login;
-    }
-
-    public function setLogin(string $login): static
-    {
-        $this->login = $login;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Seance>
-     */
     public function getSeances(): Collection
     {
         return $this->seances;
@@ -107,19 +76,16 @@ class Patient
             $this->seances->add($seance);
             $seance->setPatient($this);
         }
-
         return $this;
     }
 
     public function removeSeance(Seance $seance): static
     {
         if ($this->seances->removeElement($seance)) {
-            // set the owning side to null (unless already changed)
             if ($seance->getPatient() === $this) {
                 $seance->setPatient(null);
             }
         }
-
         return $this;
     }
 }
