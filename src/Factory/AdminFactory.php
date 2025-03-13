@@ -3,15 +3,13 @@
 namespace App\Factory;
 
 use AllowDynamicProperties;
-use App\Entity\Professionnel;
+use App\Entity\Admin;
 use App\Entity\User;
-use App\Repository\ProfessionnelRepository;
 use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
 use Zenstruck\Foundry\Persistence\Proxy;
-use Zenstruck\Foundry\Persistence\ProxyRepositoryDecorator;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-#[AllowDynamicProperties] final class ProfessionnelFactory extends PersistentProxyObjectFactory
+#[AllowDynamicProperties] final class AdminFactory extends PersistentProxyObjectFactory
 {
     private UserPasswordHasherInterface $passwordHasher;
 
@@ -23,7 +21,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
     public static function class(): string
     {
-        return Professionnel::class;
+        return Admin::class;
     }
 
     protected function normalizeName(string $name): string
@@ -36,29 +34,6 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
     protected function defaults(): array|callable
     {
-        $specialitesReeducation = [
-            'Rhumatologue',
-            'Neurologue',
-            'Cardiologue',
-            'Pneumologue',
-            'Kinésithérapeute',
-            'Orthopédiste',
-            'Médecin de réadaptation',
-            'Gériatre',
-            'Pédiatre',
-            'Chirurgien orthopédiste',
-            'Neurochirurgien',
-            'Médecin de la douleur',
-            'Oncologue',
-            'Endocrinologue',
-            'Psychiatre',
-            'Orthophoniste',
-            'Ergothérapeute',
-            'Podologue',
-            'Médecin du sport',
-            'Médecin généraliste',
-        ];
-
         $firstName = self::faker()->firstName();
         $lastName = self::faker()->lastName();
         $normalizedFirstname = $this->normalizeName($firstName);
@@ -70,10 +45,10 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
             'login' => $login,
             'nom' => $normalizedLastname,
             'prenom' => $normalizedFirstname,
-            'specialite' => self::faker()->randomElement($specialitesReeducation),
             'password' => $this->passwordHasher->hashPassword(new User(), $password),
-            'roles' => ['ROLE_PROFESSIONNEL'],
             'email' => "$login@example.com",
+            'typeAdmin' => self::faker()->randomElement(['ADMIN_INF', 'ADMIN_SEC']),
+            'roles' => ['ROLE_ADMIN'],
         ];
     }
 }
