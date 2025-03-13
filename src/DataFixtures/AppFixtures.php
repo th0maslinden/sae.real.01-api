@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Factory\AdminFactory;
 use App\Factory\UserFactory;
 use App\Factory\PatientFactory;
 use App\Factory\ProfessionnelFactory;
@@ -13,9 +14,6 @@ class AppFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-        // Création de 5 utilisateurs génériques
-        UserFactory::createMany(5);
-
         // Création de 10 patients
         $patients = PatientFactory::createMany(10);
 
@@ -39,5 +37,8 @@ class AppFixtures extends Fixture
                 'patient' => $patients[array_rand($patients)],
             ]);
         }
+
+        // Création des Administrateurs
+        AdminFactory::createMany(3);
     }
 }

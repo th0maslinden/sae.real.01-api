@@ -14,7 +14,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
 #[ORM\DiscriminatorMap([
     'user' => User::class,
     'patient' => Patient::class,
-    'professionnel' => Professionnel::class
+    'professionnel' => Professionnel::class,
+    'admin' => Admin::class,
 ])]
 #[ORM\Table(name: 'user')]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_LOGIN', fields: ['login'])]
