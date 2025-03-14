@@ -3,28 +3,50 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Put;
 use App\Repository\ProfessionnelRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: ProfessionnelRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    operations: [
+        new Get(normalizationContext: ['groups' => ['professionnel:read']]),
+        new Put(
+            normalizationContext: ['groups' => ['professionnel:read']],
+            denormalizationContext: ['groups' => ['professionnel:write']],
+            security: "is_granted('ROLE_ADMIN') or (object == user and is_granted('ROLE_PROFESSIONNEL'))"
+        ),
+        new Patch(
+            normalizationContext: ['groups' => ['professionnel:read']],
+            denormalizationContext: ['groups' => ['professionnel:write']],
+            security: "is_granted('ROLE_ADMIN') or (object == user and is_granted('ROLE_PROFESSIONNEL'))"
+        )
+    ]
+)]
 class Professionnel extends User
 {
     #[ORM\Column(length: 40)]
+    #[Groups(['professionnel:read', 'professionnel:write'])]
     private ?string $nom = null;
 
     #[ORM\Column(length: 40)]
+    #[Groups(['professionnel:read', 'professionnel:write'])]
     private ?string $prenom = null;
 
     #[ORM\Column(length: 40)]
+    #[Groups(['professionnel:read', 'professionnel:write'])]
     private ?string $specialite = null;
 
     /**
      * @var Collection<int, Seance>
      */
     #[ORM\OneToMany(targetEntity: Seance::class, mappedBy: 'professionnel')]
+    #[Groups(['professionnel:read'])]
     private Collection $seances;
 
     public function __construct()
