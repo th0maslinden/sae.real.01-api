@@ -45,7 +45,7 @@ class Professionnel extends User
     /**
      * @var Collection<int, Seance>
      */
-    #[ORM\OneToMany(targetEntity: Seance::class, mappedBy: 'professionnel')]
+    #[ORM\OneToMany(mappedBy: 'professionnel', targetEntity: Seance::class)]
     #[Groups(['professionnel:read'])]
     private Collection $seances;
 

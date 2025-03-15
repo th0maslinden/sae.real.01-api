@@ -65,11 +65,11 @@ class Seance
 
     #[ORM\ManyToOne(inversedBy: 'seances')]
     #[Groups(['seance:read', 'seance:write'])]
-    private ?User $patient = null;
+    private ?Patient $patient = null;
 
     #[ORM\ManyToOne(inversedBy: 'seances')]
     #[Groups(['seance:read', 'seance:write'])]
-    private ?User $professionnel = null;
+    private ?Professionnel $professionnel = null;
 
     public function getId(): ?int
     {
