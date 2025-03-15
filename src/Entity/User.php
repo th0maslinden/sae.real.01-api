@@ -8,9 +8,13 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
+use ApiPlatform\OpenApi\Model\Operation;
+use App\Controller\GetAvatarController;
 use App\Repository\UserRepository;
+use App\State\MeProvider;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Attribute\Groups;
@@ -28,25 +32,53 @@ use Symfony\Component\Serializer\Attribute\Groups;
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_LOGIN', fields: ['login'])]
 #[ApiResource(
     operations: [
-        new Get(normalizationContext: ['groups' => ['user:read']]),
-        new Post(
-            normalizationContext: ['groups' => ['user:read']],
-            denormalizationContext: ['groups' => ['user:write']],
-            security: "is_granted('ROLE_ADMIN')"
+        new Get(),
+        new Get(
+            uriTemplate: '/me',
+            openapi: new Operation(
+                summary: 'Retrieves the connected user',
+                description: 'Retrieves the connected user',
+                security: ["is_granted('ROLE_USER')"],
+            ),
+            normalizationContext: ['groups' => ['User_read', 'User_me']],
+            provider: MeProvider::class
         ),
-        new Put(
-            normalizationContext: ['groups' => ['user:read']],
-            denormalizationContext: ['groups' => ['user:write']],
-            security: "is_granted('ROLE_ADMIN') or (object == user and is_granted('ROLE_PROFESSIONNEL'))"
+        new Get(
+            uriTemplate: '/users/{id}/avatar',
+            formats: [
+                'png' => 'image/png',
+            ],
+            controller: GetAvatarController::class,
+            openapi: new Operation(
+                responses: [
+                    '200' => [
+                        'description' => 'The user avatar',
+                        'content' => [
+                            'image/png' => [
+                                'schema' => [
+                                    'type' => 'string',
+                                    'format' => 'binary',
+                                ],
+                            ],
+                        ],
+                    ],
+                    '404' => [
+                        'description' => 'User does not exist',
+                    ],
+                ],
+                summary: 'Retrieves a user avatar',
+                description: 'Retrieves the PNG image corresponding to a user avatar',
+            ),
         ),
         new Patch(
-            normalizationContext: ['groups' => ['user:read']],
-            denormalizationContext: ['groups' => ['user:write']],
-            security: "is_granted('ROLE_ADMIN') or (object == user and is_granted('ROLE_PROFESSIONNEL'))"
+            normalizationContext: ['groups' => ['User_read', 'User_me']],
+            denormalizationContext: ['groups' => ['User_write']],
+            security: "is_granted('ROLE_USER') and object == user"
         ),
-        new Delete(security: "is_granted('ROLE_ADMIN')")
-    ]
+    ],
+    normalizationContext: ['groups' => ['User_read']]
 )]
+#[UniqueEntity('login')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
