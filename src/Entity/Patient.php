@@ -3,28 +3,50 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Put;
 use App\Repository\PatientRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: PatientRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    operations: [
+        new Get(normalizationContext: ['groups' => ['patient:read']]),
+        new Put(
+            normalizationContext: ['groups' => ['patient:read']],
+            denormalizationContext: ['groups' => ['patient:write']],
+            security: "is_granted('ROLE_ADMIN') or (object == user and is_granted('ROLE_PATIENT'))"
+        ),
+        new Patch(
+            normalizationContext: ['groups' => ['patient:read']],
+            denormalizationContext: ['groups' => ['patient:write']],
+            security: "is_granted('ROLE_ADMIN') or (object == user and is_granted('ROLE_PATIENT'))"
+        )
+    ]
+)]
 class Patient extends User
 {
     #[ORM\Column(length: 40)]
+    #[Groups(['patient:read', 'patient:write'])]
     private ?string $nom = null;
 
     #[ORM\Column(length: 40)]
+    #[Groups(['patient:read', 'patient:write'])]
     private ?string $prenom = null;
 
     #[ORM\Column(length: 100, nullable: true)]
+    #[Groups(['patient:read', 'patient:write'])]
     private ?string $pathologie = null;
 
     /**
      * @var Collection<int, Seance>
      */
     #[ORM\OneToMany(targetEntity: Seance::class, mappedBy: 'patient')]
+    #[Groups(['patient:read'])]
     private Collection $seances;
 
     public function __construct()

@@ -3,39 +3,73 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
 use App\Repository\SeanceRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: SeanceRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    operations: [
+        new Get(normalizationContext: ['groups' => ['seance:read']]),
+        new Post(
+            normalizationContext: ['groups' => ['seance:read']],
+            denormalizationContext: ['groups' => ['seance:write']],
+            security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_PROFESSIONNEL')"
+        ),
+        new Put(
+            normalizationContext: ['groups' => ['seance:read']],
+            denormalizationContext: ['groups' => ['seance:write']],
+            security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_PROFESSIONNEL') or (object.getPatient() == user)"
+        ),
+        new Patch(
+            normalizationContext: ['groups' => ['seance:read']],
+            denormalizationContext: ['groups' => ['seance:write']],
+            security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_PROFESSIONNEL') or (object.getPatient() == user)"
+        ),
+        new Delete(security: "is_granted('ROLE_ADMIN')")
+    ]
+)]
 class Seance
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['seance:read'])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    #[Groups(['seance:read', 'seance:write'])]
     private ?\DateTimeInterface $date = null;
 
     #[ORM\Column(type: Types::TIME_MUTABLE, nullable: true)]
+    #[Groups(['seance:read', 'seance:write'])]
     private ?\DateTimeInterface $heureDebut = null;
 
     #[ORM\Column(type: Types::TIME_MUTABLE, nullable: true)]
+    #[Groups(['seance:read', 'seance:write'])]
     private ?\DateTimeInterface $heureFin = null;
 
     #[ORM\Column(length: 1000, nullable: true)]
+    #[Groups(['seance:read', 'seance:write'])]
     private ?string $note = null;
 
     #[ORM\Column(length: 50, nullable: true)]
+    #[Groups(['seance:read', 'seance:write'])]
     private ?string $raison = null;
 
     #[ORM\ManyToOne(inversedBy: 'seances')]
-    private ?Patient $patient = null;
+    #[Groups(['seance:read', 'seance:write'])]
+    private ?User $patient = null;
 
     #[ORM\ManyToOne(inversedBy: 'seances')]
-    private ?Professionnel $professionnel = null;
+    #[Groups(['seance:read', 'seance:write'])]
+    private ?User $professionnel = null;
 
     public function getId(): ?int
     {
