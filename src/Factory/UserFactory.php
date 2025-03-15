@@ -42,11 +42,11 @@ final class UserFactory extends PersistentProxyObjectFactory
     protected function defaults(): array|callable
     {
         $login = self::faker()->userName();
-        $password = 'password123';
+        $password = 'test';
 
         return [
             'login' => $login,
-            'password' => $this->passwordHasher->hashPassword(new User(), 'password123'),
+            'password' => $this->passwordHasher->hashPassword(new User(), $password),
             'roles' => ['ROLE_USER'],
             'email' => self::faker()->email(),
         ];

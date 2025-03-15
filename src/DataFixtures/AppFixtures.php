@@ -3,7 +3,6 @@
 namespace App\DataFixtures;
 
 use App\Factory\AdminFactory;
-use App\Factory\UserFactory;
 use App\Factory\PatientFactory;
 use App\Factory\ProfessionnelFactory;
 use App\Factory\SeanceFactory;

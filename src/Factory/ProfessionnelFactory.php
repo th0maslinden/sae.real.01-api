@@ -64,7 +64,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
         $normalizedFirstname = $this->normalizeName($firstName);
         $normalizedLastname = $this->normalizeName($lastName);
         $login = strtolower($normalizedFirstname).'.'.strtolower($normalizedLastname).self::faker()->numberBetween(1, 999);
-        $password = 'password123';
+        $password = 'test';
 
         return [
             'login' => $login,
