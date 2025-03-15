@@ -99,6 +99,8 @@
         "doctrine/doctrine-fixtures-bundle": "^4.0",
         "friendsofphp/php-cs-fixer": "^3.68",
         "symfony/maker-bundle": "^1.62",
+        "symfony/stopwatch": "7.2.*",
+        "symfony/web-profiler-bundle": "7.2.*",
         "zenstruck/foundry": "^2.3"
     }
 }
