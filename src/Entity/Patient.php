@@ -25,7 +25,7 @@ use Symfony\Component\Serializer\Attribute\Groups;
             normalizationContext: ['groups' => ['patient:read']],
             denormalizationContext: ['groups' => ['patient:write']],
             security: "is_granted('ROLE_ADMIN') or (object == user and is_granted('ROLE_PATIENT'))"
-        )
+        ),
     ]
 )]
 class Patient extends User
@@ -62,6 +62,7 @@ class Patient extends User
     public function setNom(string $nom): static
     {
         $this->nom = $nom;
+
         return $this;
     }
 
@@ -73,6 +74,7 @@ class Patient extends User
     public function setPrenom(string $prenom): static
     {
         $this->prenom = $prenom;
+
         return $this;
     }
 
@@ -84,6 +86,7 @@ class Patient extends User
     public function setPathologie(?string $pathologie): static
     {
         $this->pathologie = $pathologie;
+
         return $this;
     }
 
@@ -98,6 +101,7 @@ class Patient extends User
             $this->seances->add($seance);
             $seance->setPatient($this);
         }
+
         return $this;
     }
 
@@ -108,6 +112,7 @@ class Patient extends User
                 $seance->setPatient(null);
             }
         }
+
         return $this;
     }
 }

@@ -3,11 +3,8 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Patch;
-use ApiPlatform\Metadata\Post;
-use ApiPlatform\Metadata\Put;
 use ApiPlatform\OpenApi\Model\Operation;
 use App\Controller\GetAvatarController;
 use App\Repository\UserRepository;
@@ -100,7 +97,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     protected ?string $password = null;
 
     #[ORM\Column(type: Types::BLOB, nullable: true)]
-    protected $avatar = null;
+    protected $avatar;
 
     #[ORM\Column(length: 100)]
     #[Groups(['user:read', 'user:write'])]
@@ -119,6 +116,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setLogin(string $login): static
     {
         $this->login = $login;
+
         return $this;
     }
 
@@ -131,12 +129,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $roles = $this->roles;
         $roles[] = 'ROLE_USER';
+
         return array_unique($roles);
     }
 
     public function setRoles(array $roles): static
     {
         $this->roles = $roles;
+
         return $this;
     }
 
@@ -148,10 +148,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPassword(string $password): static
     {
         $this->password = $password;
+
         return $this;
     }
 
-    public function eraseCredentials(): void {}
+    public function eraseCredentials(): void
+    {
+    }
 
     public function getAvatar()
     {
@@ -161,6 +164,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setAvatar($avatar): static
     {
         $this->avatar = $avatar;
+
         return $this;
     }
 
@@ -172,6 +176,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setEmail(string $email): static
     {
         $this->email = $email;
+
         return $this;
     }
 }

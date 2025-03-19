@@ -2,14 +2,12 @@
 
 namespace App\Factory;
 
-use AllowDynamicProperties;
 use App\Entity\Admin;
 use App\Entity\User;
-use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
-use Zenstruck\Foundry\Persistence\Proxy;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
 
-#[AllowDynamicProperties] final class AdminFactory extends PersistentProxyObjectFactory
+#[\AllowDynamicProperties] final class AdminFactory extends PersistentProxyObjectFactory
 {
     private UserPasswordHasherInterface $passwordHasher;
 

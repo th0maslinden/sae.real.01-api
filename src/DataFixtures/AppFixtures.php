@@ -6,7 +6,6 @@ use App\Factory\AdminFactory;
 use App\Factory\PatientFactory;
 use App\Factory\ProfessionnelFactory;
 use App\Factory\SeanceFactory;
-use App\Factory\UserFactory;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
@@ -44,8 +43,8 @@ class AppFixtures extends Fixture
         // Création compte admin de test
         AdminFactory::createOne([
             'login' => 'user1',
-            'password'=> 'test',
+            'password' => 'test',
             'roles' => ['ROLE_ADMIN'],
-            ]);
+        ]);
     }
 }

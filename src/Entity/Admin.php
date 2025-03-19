@@ -22,7 +22,7 @@ use Symfony\Component\Serializer\Attribute\Groups;
             normalizationContext: ['groups' => ['admin:read']],
             denormalizationContext: ['groups' => ['admin:write']],
             security: "is_granted('ROLE_ADMIN')"
-        )
+        ),
     ]
 )]
 class Admin extends User
@@ -46,6 +46,7 @@ class Admin extends User
     public function setNom(string $nom): static
     {
         $this->nom = $nom;
+
         return $this;
     }
 
@@ -57,6 +58,7 @@ class Admin extends User
     public function setPrenom(string $prenom): static
     {
         $this->prenom = $prenom;
+
         return $this;
     }
 
@@ -68,6 +70,7 @@ class Admin extends User
     public function setTypeAdmin(string $typeAdmin): static
     {
         $this->typeAdmin = $typeAdmin;
+
         return $this;
     }
 }

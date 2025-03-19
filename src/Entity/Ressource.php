@@ -31,7 +31,7 @@ use Symfony\Component\Serializer\Attribute\Groups;
             denormalizationContext: ['groups' => ['ressource:write']],
             security: "is_granted('ROLE_ADMIN')"
         ),
-        new Delete(security: "is_granted('ROLE_ADMIN')")
+        new Delete(security: "is_granted('ROLE_ADMIN')"),
     ]
 )]
 class Ressource
@@ -48,7 +48,6 @@ class Ressource
 
     #[ORM\Column(length: 60, nullable: true)]
     #[Groups(['ressource:read', 'ressource:write'])]
-
     private ?string $type = null;
 
     public function getId(): ?int

@@ -32,7 +32,7 @@ use Symfony\Component\Serializer\Attribute\Groups;
             denormalizationContext: ['groups' => ['seance:write']],
             security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_PROFESSIONNEL') or (object.getPatient() == user)"
         ),
-        new Delete(security: "is_granted('ROLE_ADMIN')")
+        new Delete(security: "is_granted('ROLE_ADMIN')"),
     ]
 )]
 class Seance
