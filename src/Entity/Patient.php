@@ -45,7 +45,7 @@ class Patient extends User
     /**
      * @var Collection<int, Seance>
      */
-    #[ORM\OneToMany(targetEntity: Seance::class, mappedBy: 'patient')]
+    #[ORM\OneToMany(mappedBy: 'patient', targetEntity: Seance::class)]
     #[Groups(['patient:read'])]
     private Collection $seances;
 

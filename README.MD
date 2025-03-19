@@ -38,3 +38,6 @@ composer start
 ```
 composer test
 ```
+### Compte admin de test
+
+**login** : user1 **pass** : test
