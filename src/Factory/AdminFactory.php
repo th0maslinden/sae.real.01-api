@@ -39,16 +39,21 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
         $normalizedFirstname = $this->normalizeName($firstName);
         $normalizedLastname = $this->normalizeName($lastName);
         $login = strtolower($normalizedFirstname).'.'.strtolower($normalizedLastname).self::faker()->numberBetween(1, 999);
+        $email = strtolower(
+            strtolower($normalizedFirstname).'.'.
+            strtolower($normalizedLastname).
+            '@'.self::faker()->domainName
+        );
         $password = 'test';
 
         return [
             'login' => $login,
-            'nom' => $normalizedLastname,
-            'prenom' => $normalizedFirstname,
-            'password' => $this->passwordHasher->hashPassword(new User(), $password),
-            'email' => "$login@example.com",
+            'lastname' => $normalizedLastname,
+            'firstname' => $normalizedFirstname,
             'typeAdmin' => self::faker()->randomElement(['ADMIN_INF', 'ADMIN_SEC']),
+            'password' => $this->passwordHasher->hashPassword(new User(), $password),
             'roles' => ['ROLE_ADMIN'],
+            'email' => $email,
         ];
     }
 }
