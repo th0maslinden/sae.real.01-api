@@ -25,19 +25,11 @@ use Symfony\Component\Serializer\Attribute\Groups;
             normalizationContext: ['groups' => ['professionnel:read']],
             denormalizationContext: ['groups' => ['professionnel:write']],
             security: "is_granted('ROLE_ADMIN') or (object == user and is_granted('ROLE_PROFESSIONNEL'))"
-        )
+        ),
     ]
 )]
 class Professionnel extends User
 {
-    #[ORM\Column(length: 40)]
-    #[Groups(['professionnel:read', 'professionnel:write'])]
-    private ?string $nom = null;
-
-    #[ORM\Column(length: 40)]
-    #[Groups(['professionnel:read', 'professionnel:write'])]
-    private ?string $prenom = null;
-
     #[ORM\Column(length: 40)]
     #[Groups(['professionnel:read', 'professionnel:write'])]
     private ?string $specialite = null;
@@ -54,28 +46,6 @@ class Professionnel extends User
         $this->seances = new ArrayCollection();
     }
 
-    public function getNom(): ?string
-    {
-        return $this->nom;
-    }
-
-    public function setNom(string $nom): static
-    {
-        $this->nom = $nom;
-        return $this;
-    }
-
-    public function getPrenom(): ?string
-    {
-        return $this->prenom;
-    }
-
-    public function setPrenom(string $prenom): static
-    {
-        $this->prenom = $prenom;
-        return $this;
-    }
-
     public function getSpecialite(): ?string
     {
         return $this->specialite;
@@ -84,6 +54,7 @@ class Professionnel extends User
     public function setSpecialite(string $specialite): static
     {
         $this->specialite = $specialite;
+
         return $this;
     }
 
@@ -98,6 +69,7 @@ class Professionnel extends User
             $this->seances->add($seance);
             $seance->setProfessionnel($this);
         }
+
         return $this;
     }
 
@@ -108,6 +80,7 @@ class Professionnel extends User
                 $seance->setProfessionnel(null);
             }
         }
+
         return $this;
     }
 }

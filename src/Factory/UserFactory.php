@@ -3,34 +3,20 @@
 namespace App\Factory;
 
 use App\Entity\User;
-use App\Repository\UserRepository;
+use Jdenticon\Identicon;
 use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
-use Zenstruck\Foundry\Persistence\Proxy;
-use Zenstruck\Foundry\Persistence\ProxyRepositoryDecorator;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 /**
  * @extends PersistentProxyObjectFactory<User>
- *
- * @method        User|Proxy create(array|callable $attributes = [])
- * @method static User|Proxy createOne(array $attributes = [])
- * @method static User|Proxy find(object|array|mixed $criteria)
- * @method static User|Proxy findOrCreate(array $attributes)
- * @method static User|Proxy first(string $sortedField = 'id')
- * @method static User|Proxy last(string $sortedField = 'id')
- * @method static User|Proxy random(array $attributes = [])
- * @method static User|Proxy randomOrCreate(array $attributes = [])
- * @method static UserRepository|ProxyRepositoryDecorator repository()
- * @method static User[]|Proxy[] all()
- * @method static User[]|Proxy[] createMany(int $number, array|callable $attributes = [])
- * @method static User[]|Proxy[] createSequence(iterable|callable $sequence)
- * @method static User[]|Proxy[] findBy(array $attributes)
- * @method static User[]|Proxy[] randomRange(int $min, int $max, array $attributes = [])
- * @method static User[]|Proxy[] randomSet(int $number, array $attributes = [])
  */
 final class UserFactory extends PersistentProxyObjectFactory
 {
-    public function __construct(private UserPasswordHasherInterface $passwordHasher)
+    /**
+     * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#factories-as-services
+     *
+     * @todo inject services if required
+     */
+    public function __construct()
     {
     }
 
@@ -39,16 +25,68 @@ final class UserFactory extends PersistentProxyObjectFactory
         return User::class;
     }
 
+    /**
+     * Create an avatar resource using Jdenticon.
+     *
+     * @return resource
+     */
+    protected static function createAvatar(string $value)
+    {
+        $icon = new Identicon([
+            'value' => $value,
+            'size' => 50,
+        ]);
+
+        return fopen($icon->getImageDataUri('png'), 'r');
+    }
+
+    /**
+     * Transliterate and sanitize a string.
+     */
+    protected static function transliterate(string $value): string
+    {
+        $transliterator = \Transliterator::create('Any-Latin; Latin-ASCII');
+        $value = $transliterator->transliterate($value);
+
+        return preg_replace('/[^a-zA-Z0-9]/', '', $value);
+    }
+
+    /**
+     * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#model-factories
+     *
+     * @todo add your default values here
+     */
     protected function defaults(): array|callable
     {
-        $login = self::faker()->userName();
-        $password = 'test';
+        $faker = self::faker();
+
+        $firstname = $faker->firstName;
+        $lastname = $faker->lastName;
+        $email = strtolower(
+            self::transliterate($firstname).'.'.
+            self::transliterate($lastname).
+            '@'.$faker->domainName
+        );
 
         return [
-            'login' => $login,
-            'password' => $this->passwordHasher->hashPassword(new User(), $password),
+            'avatar' => self::createAvatar("$firstname $lastname"),
+            'email' => $email,
+            'firstname' => $firstname,
+            'lastname' => $lastname,
+            'login' => self::faker()->unique()->numerify($lastname.'###'),
+            'password' => 'test',
             'roles' => ['ROLE_USER'],
-            'email' => self::faker()->email(),
         ];
+    }
+
+    /**
+     * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#initialization
+     */
+    protected function initialize(): static
+    {
+        return $this
+            ->afterInstantiate(function (User $user): void {
+                $user->setPassword(password_hash($user->getPassword(), PASSWORD_DEFAULT));
+            });
     }
 }

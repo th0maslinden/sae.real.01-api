@@ -5,6 +5,12 @@
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
 
+when@test:
+    services:
+        # Disable logger to avoid showing errors during tests
+        Psr\Log\NullLogger: ~
+        logger: '@Psr\Log\NullLogger'
+
 services:
     # default configuration for services in *this* file
     _defaults:
