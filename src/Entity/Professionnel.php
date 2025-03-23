@@ -31,13 +31,13 @@ use Symfony\Component\Serializer\Attribute\Groups;
 class Professionnel extends User
 {
     #[ORM\Column(length: 40)]
-    #[Groups(['professionnel:read', 'professionnel:write'])]
+    #[Groups(['professionnel:read', 'professionnel:write', 'search_result'])]
     private ?string $specialite = null;
 
     /**
      * @var Collection<int, Seance>
      */
-    #[ORM\OneToMany(mappedBy: 'professionnel', targetEntity: Seance::class)]
+    #[ORM\OneToMany(targetEntity: Seance::class, mappedBy: 'professionnel')]
     #[Groups(['professionnel:read'])]
     private Collection $seances;
 
