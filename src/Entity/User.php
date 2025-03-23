@@ -118,7 +118,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
     #[ORM\Column(length: 30)]
-    #[Groups(['User_read', 'User_write'])]
+    #[Groups(['User_read', 'User_write', 'search_result'])]
     #[Assert\Regex(
         pattern: '/[<>\"&]/',
         message: 'Le nom contient des caractères interdits : <, >, & et "',
@@ -134,7 +134,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $firstname = null;
 
     #[ORM\Column(length: 40)]
-    #[Groups(['User_read', 'User_write'])]
+    #[Groups(['User_read', 'User_write', 'search_result'])]
     #[Assert\Regex(
         pattern: '/[<>\"&]/',
         message: 'Le nom contient des caractères interdits : <, >, & et "',
