@@ -23,11 +23,10 @@ security:
                 login_path: app_login
                 check_path: app_login
                 enable_csrf: true
-                default_target_path: redirect_to_frontend
-                always_use_default_target_path: true
+                default_target_path: api_doc
             logout:
                 path: app_logout
-                target: redirect_to_frontend
+                target: api_doc
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
