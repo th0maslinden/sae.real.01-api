@@ -12,7 +12,7 @@ use Symfony\Component\Serializer\Attribute\Groups;
 #[ORM\Entity]
 #[ApiResource(
     operations: [
-        new Get(normalizationContext: ['groups' => ['admin:read']]),
+        new Get(normalizationContext: ['groups' => ['admin:read', 'User_read']]),
         new Put(
             normalizationContext: ['groups' => ['admin:read']],
             denormalizationContext: ['groups' => ['admin:write']],

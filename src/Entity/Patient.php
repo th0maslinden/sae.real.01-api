@@ -15,7 +15,7 @@ use Symfony\Component\Serializer\Attribute\Groups;
 #[ORM\Entity(repositoryClass: PatientRepository::class)]
 #[ApiResource(
     operations: [
-        new Get(normalizationContext: ['groups' => ['patient:read']]),
+        new Get(normalizationContext: ['groups' => ['patient:read', 'User_read']]),
         new Put(
             normalizationContext: ['groups' => ['patient:read']],
             denormalizationContext: ['groups' => ['patient:write']],
@@ -37,7 +37,7 @@ class Patient extends User
     /**
      * @var Collection<int, Seance>
      */
-    #[ORM\OneToMany(mappedBy: 'patient', targetEntity: Seance::class)]
+    #[ORM\OneToMany(targetEntity: Seance::class, mappedBy: 'patient')]
     #[Groups(['patient:read'])]
     private Collection $seances;
 
