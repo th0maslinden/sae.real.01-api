@@ -16,18 +16,19 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
-            entry_point: App\Security\ApiAuthenticationEntryPoint
             lazy: true
             provider: app_user_provider
             form_login:
                 login_path: app_login
                 check_path: app_login
                 enable_csrf: true
-                default_target_path: api_doc
+                always_use_default_target_path: true
+                default_target_path: /login
             logout:
                 path: app_logout
-                target: api_doc
+                target: redirect_to_frontend
 
+            entry_point: App\Security\ApiAuthenticationEntryPoint
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
 
