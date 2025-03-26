@@ -11,7 +11,7 @@ use ApiPlatform\Metadata\Put;
 use App\Repository\SeanceRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Attribute\Groups;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: SeanceRepository::class)]
 #[ApiResource(
@@ -25,12 +25,12 @@ use Symfony\Component\Serializer\Attribute\Groups;
         new Put(
             normalizationContext: ['groups' => ['seance:read']],
             denormalizationContext: ['groups' => ['seance:write']],
-            security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_PROFESSIONNEL') or (object.getPatient() == user)"
+            security: "is_granted('ROLE_ADMIN') or (user == object.getPatient() and is_granted('ROLE_PROFESSIONNEL'))"
         ),
         new Patch(
             normalizationContext: ['groups' => ['seance:read']],
             denormalizationContext: ['groups' => ['seance:write']],
-            security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_PROFESSIONNEL') or (object.getPatient() == user)"
+            security: "is_granted('ROLE_ADMIN') or (user == object.getPatient() and is_granted('ROLE_PROFESSIONNEL'))"
         ),
         new Delete(security: "is_granted('ROLE_ADMIN')")
     ]
@@ -55,21 +55,21 @@ class Seance
     #[Groups(['seance:read', 'seance:write'])]
     private ?\DateTimeInterface $heureFin = null;
 
-    #[ORM\Column(length: 1000, nullable: true)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     #[Groups(['seance:read', 'seance:write'])]
     private ?string $note = null;
 
-    #[ORM\Column(length: 50, nullable: true)]
+    #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['seance:read', 'seance:write'])]
     private ?string $raison = null;
 
-    #[ORM\ManyToOne(inversedBy: 'seances')]
-    #[Groups(['seance:read', 'seance:write'])]
-    private ?Patient $patient = null;
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(name: "patient_id", referencedColumnName: "id", nullable: false, onDelete: "CASCADE")]
+    private ?User $patient = null;
 
-    #[ORM\ManyToOne(inversedBy: 'seances')]
-    #[Groups(['seance:read', 'seance:write'])]
-    private ?Professionnel $professionnel = null;
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(name: "professionnel_id", referencedColumnName: "id", nullable: false, onDelete: "CASCADE")]
+    private ?User $professionnel = null;
 
     public function getId(): ?int
     {
@@ -84,7 +84,6 @@ class Seance
     public function setDate(?\DateTimeInterface $date): static
     {
         $this->date = $date;
-
         return $this;
     }
 
@@ -96,7 +95,6 @@ class Seance
     public function setHeureDebut(?\DateTimeInterface $heureDebut): static
     {
         $this->heureDebut = $heureDebut;
-
         return $this;
     }
 
@@ -108,7 +106,6 @@ class Seance
     public function setHeureFin(?\DateTimeInterface $heureFin): static
     {
         $this->heureFin = $heureFin;
-
         return $this;
     }
 
@@ -120,7 +117,6 @@ class Seance
     public function setNote(?string $note): static
     {
         $this->note = $note;
-
         return $this;
     }
 
@@ -132,31 +128,28 @@ class Seance
     public function setRaison(?string $raison): static
     {
         $this->raison = $raison;
-
         return $this;
     }
 
-    public function getPatient(): ?Patient
+    public function getPatient(): User
     {
         return $this->patient;
     }
 
-    public function setPatient(?Patient $patient): static
+    public function setPatient(?User $patient): static
     {
         $this->patient = $patient;
-
         return $this;
     }
 
-    public function getProfessionnel(): ?Professionnel
+    public function getProfessionnel(): User
     {
         return $this->professionnel;
     }
 
-    public function setProfessionnel(?Professionnel $professionnel): static
+    public function setProfessionnel(?User $professionnel): static
     {
         $this->professionnel = $professionnel;
-
         return $this;
     }
 }
