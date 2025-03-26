@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\Professionnel;
 use App\Repository\ProfessionnelRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -44,4 +46,24 @@ final class ProfessionnelController extends AbstractController
         return new JsonResponse($jsonContent, 200, [], true);
     }
 
+    #[Route('/api/professionnels/{id}/seances', name: 'get_professionnel_seances', methods: ['GET'])]
+    public function getSeancesForProfessionnel(int $id, EntityManagerInterface $entityManager, SerializerInterface $serializer): JsonResponse
+    {
+        // Récupérer le professionnel
+        $professionnel = $entityManager->getRepository(Professionnel::class)->find($id);
+
+        if (!$professionnel) {
+            return $this->json([
+                'error' => 'Professionnel non trouvé'
+            ], Response::HTTP_NOT_FOUND);
+        }
+
+        // Obtenir les séances associées au professionnel
+        $seances = $professionnel->getSeances();
+
+        // Serializer les séances
+        $data = $serializer->normalize($seances, null, ['groups' => ['seance:read']]);
+
+        return $this->json($data);
+    }
 }
