@@ -26,7 +26,8 @@ security:
                 default_target_path: /login
             logout:
                 path: app_logout
-                target: /login
+                target: redirect_to_frontend
+
             entry_point: App\Security\ApiAuthenticationEntryPoint
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
