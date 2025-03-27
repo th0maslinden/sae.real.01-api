@@ -45,7 +45,18 @@ class UserCrudController extends AbstractCrudController
     {
         $fields = [
             IdField::new('id')->onlyOnIndex(),
-            ArrayField::new('roles')->onlyOnIndex(),
+            ArrayField::new('roles')
+                ->formatValue(function ($value) {
+                    if (in_array('ROLE_ADMIN', $value)) {
+                        return '<i class="fa-solid fa-address-card"></i>';
+                    } elseif (in_array('ROLE_PROFESSIONNEL', $value)) {
+                        return '<i class="fa-solid fa-user-nurse"></i>';
+                    } if (in_array('ROLE_USER', $value)) {
+                        return '<i class="fa fa-user"></i>';
+                    } else {
+                        return '';
+                    }
+                })->onlyOnIndex(),
             TextField::new('login'),
             TextField::new('firstname'),
             TextField::new('lastname'),
