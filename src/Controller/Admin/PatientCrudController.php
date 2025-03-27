@@ -2,22 +2,23 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Patient;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
-use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 
-class UserCrudController extends AbstractCrudController
+class PatientCrudController extends AbstractCrudController
 {
+
     private UserPasswordHasherInterface $passwordHasher;
 
     public function __construct(UserPasswordHasherInterface $passwordHasher)
@@ -39,40 +40,12 @@ class UserCrudController extends AbstractCrudController
 
     public static function getEntityFqcn(): string
     {
-        return User::class;
+        return Patient::class;
     }
 
 
     public function configureFields(string $pageName): iterable
     {
-        $fields = [
-            IdField::new('id')->onlyOnIndex(),
-            ArrayField::new('roles')
-                ->formatValue(function ($value) {
-                    if (in_array('ROLE_ADMIN', $value)) {
-                        return '<i class="fa-solid fa-address-card"></i>';
-                    } elseif (in_array('ROLE_PROFESSIONNEL', $value)) {
-                        return '<i class="fa-solid fa-user-nurse"></i>';
-                    } if (in_array('ROLE_USER', $value)) {
-                        return '<i class="fa fa-user"></i>';
-                    } else {
-                        return '';
-                    }
-                })->onlyOnIndex(),
-            TextField::new('login'),
-            TextField::new('firstname'),
-            TextField::new('lastname'),
-            TextField::new('password')
-                ->onlyOnForms()
-                ->setFormType(PasswordType::class)
-                ->setRequired(false)
-                ->setEmptyData('')
-                ->setFormTypeOption('attr', ['autocomplete' => 'new-password']),
-            EmailField::new('email'),
-            TextField::new('pathologie')->onlyOnIndex(),
-            TextField::new('specialite')->onlyOnIndex(),
-        ];
-
         $pathologies = [
             'Arthrose',
             'Spondylarthrite ankylosante',
@@ -108,56 +81,36 @@ class UserCrudController extends AbstractCrudController
             'Rééducation après chirurgie pour tumeur cérébrale',
         ];
 
-        if ($pageName === Crud::PAGE_EDIT && in_array('ROLE_PATIENT', $this->getContext()->getEntity()->getInstance()->getRoles())) {
-            $fields[] = ChoiceField::new('pathologie')
+        return [
+            IdField::new('id')->onlyOnIndex(),
+            TextField::new('login'),
+            TextField::new('firstname'),
+            TextField::new('lastname'),
+            TextField::new('password')
+                ->onlyOnForms()
+                ->setFormType(PasswordType::class)
+                ->setRequired(false)
+                ->setEmptyData('')
+                ->setFormTypeOption('attr', ['autocomplete' => 'new-password']),
+            EmailField::new('email'),
+            TextField::new('pathologie')->onlyOnIndex(),
+            ChoiceField::new('pathologie')
                 ->setChoices(array_combine($pathologies, $pathologies))
                 ->setRequired(false)
-                ->allowMultipleChoices(false);
-        }
-
-        $specialite = [
-            'Rhumatologue',
-            'Neurologue',
-            'Cardiologue',
-            'Pneumologue',
-            'Kinésithérapeute',
-            'Orthopédiste',
-            'Médecin de réadaptation',
-            'Gériatre',
-            'Pédiatre',
-            'Chirurgien orthopédiste',
-            'Neurochirurgien',
-            'Médecin de la douleur',
-            'Oncologue',
-            'Endocrinologue',
-            'Psychiatre',
-            'Orthophoniste',
-            'Ergothérapeute',
-            'Podologue',
-            'Médecin du sport',
-            'Médecin généraliste',
+                ->allowMultipleChoices(false)
+                ->onlyOnForms(),
         ];
-
-        if ($pageName === Crud::PAGE_EDIT && in_array('ROLE_PROFESSIONNEL', $this->getContext()->getEntity()->getInstance()->getRoles())) {
-            $fields[] = ChoiceField::new('specialite')
-                ->setChoices(array_combine($specialite, $specialite))
-                ->setRequired(false)
-                ->allowMultipleChoices(false);
-        }
-
-        return $fields;
-    }
-
-    public function configureActions(Actions $actions): Actions
-    {
-
-        return $actions
-            ->remove(Crud::PAGE_INDEX, Action::NEW);
     }
 
     public function setUserPasssword(User $user): void
     {
-        $password = $this->getContext()->getRequest()->request->all()['User']['password'];
+        $roles = $user->getRoles();
+        if (!in_array('ROLE_PATIENT', $roles, true)) {
+            $roles[] = 'ROLE_PATIENT';
+            $user->setRoles($roles);
+        }
+
+        $password = $this->getContext()->getRequest()->request->all()['Patient']['password'];
         if ('' != $password) {
             $hashedPassword = $this->passwordHasher->hashPassword($user, $password);
             $user->setPassword($hashedPassword);
