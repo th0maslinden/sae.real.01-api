@@ -15,7 +15,7 @@ use Symfony\Component\Serializer\Attribute\Groups;
 #[ORM\Entity(repositoryClass: ProfessionnelRepository::class)]
 #[ApiResource(
     operations: [
-        new Get(normalizationContext: ['groups' => ['professionnel:read']]),
+        new Get(normalizationContext: ['groups' => ['professionnel:read', 'User_read']]),
         new Put(
             normalizationContext: ['groups' => ['professionnel:read']],
             denormalizationContext: ['groups' => ['professionnel:write']],
