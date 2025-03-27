@@ -37,12 +37,34 @@ class AppFixtures extends Fixture
             ]);
         }
 
-        // Création des Administrateurs
-        AdminFactory::createMany(3);
-
-        // Création compte admin de test
-        AdminFactory::createOne([
-            'login' => 'user1',
+        // Création d'un compte patient de test
+        $patient = PatientFactory::createOne([
+            'login' => 'patient',
         ]);
+
+        // Associer des données existantes au compte patient
+        SeanceFactory::createMany(2, function () use ($patient, $professionnels) {
+            return [
+                'patient' => $patient,
+                'professionnel' => $professionnels[array_rand($professionnels)],
+            ];
+        });
+
+        // Création d'un compte professionnel de test
+        $professionnel = ProfessionnelFactory::createOne([
+            'login' => 'pro',
+        ]);
+
+        // Associer des données existantes au compte professionnel
+        SeanceFactory::createOne([
+            'professionnel' => $professionnel,
+            'patient' => $patients[array_rand($patients)],
+        ]);
+
+        // Création d'un compte admin de test
+        $admin = AdminFactory::createOne([
+            'login' => 'admin',
+        ]);
+
     }
 }
