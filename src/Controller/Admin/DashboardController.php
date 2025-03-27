@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Admin;
 use App\Entity\Patient;
 use App\Entity\Professionnel;
 use App\Entity\User;
@@ -51,5 +52,6 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Users', 'fa fa-users', User::class);
         yield MenuItem::linkToCrud('Patients', 'fa fa-user', Patient::class);
         yield MenuItem::linkToCrud('Professionnel', 'fa fa-user-nurse', Professionnel::class);
+        yield MenuItem::linkToCrud('Admin', 'fa-solid fa-address-card', Admin::class);
     }
 }
