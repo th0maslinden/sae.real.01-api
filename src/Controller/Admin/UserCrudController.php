@@ -3,17 +3,37 @@
 namespace App\Controller\Admin;
 
 use App\Entity\User;
+use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserCrudController extends AbstractCrudController
 {
+    private UserPasswordHasherInterface $passwordHasher;
+
+    public function __construct(UserPasswordHasherInterface $passwordHasher)
+    {
+        $this->passwordHasher = $passwordHasher;
+    }
+
+    public function updateEntity(EntityManagerInterface $entityManager, $entityInstance): void
+    {
+        $this->setUserPasssword($entityInstance);
+        parent::updateEntity($entityManager, $entityInstance);
+    }
+
+    public function persistEntity(EntityManagerInterface $entityManager, $entityInstance): void
+    {
+        $this->setUserPasssword($entityInstance);
+        parent::persistEntity($entityManager, $entityInstance);
+    }
 
     public static function getEntityFqcn(): string
     {
@@ -26,8 +46,15 @@ class UserCrudController extends AbstractCrudController
         $fields = [
             IdField::new('id')->onlyOnIndex(),
             ArrayField::new('roles')->onlyOnIndex(),
+            TextField::new('login'),
             TextField::new('firstname'),
             TextField::new('lastname'),
+            TextField::new('password')
+                ->onlyOnForms()
+                ->setFormType(PasswordType::class)
+                ->setRequired(false)
+                ->setEmptyData('')
+                ->setFormTypeOption('attr', ['autocomplete' => 'new-password']),
             EmailField::new('email'),
             TextField::new('pathologie')->onlyOnIndex(),
             TextField::new('specialite')->onlyOnIndex(),
@@ -106,6 +133,15 @@ class UserCrudController extends AbstractCrudController
         }
 
         return $fields;
+    }
+
+    public function setUserPasssword(User $user): void
+    {
+        $password = $this->getContext()->getRequest()->request->all()['User']['password'];
+        if ('' != $password) {
+            $hashedPassword = $this->passwordHasher->hashPassword($user, $password);
+            $user->setPassword($hashedPassword);
+        }
     }
 
 }
