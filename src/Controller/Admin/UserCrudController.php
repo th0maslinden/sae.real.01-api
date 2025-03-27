@@ -75,6 +75,36 @@ class UserCrudController extends AbstractCrudController
                 ->allowMultipleChoices(false);
         }
 
+        $specialite = [
+            'Rhumatologue',
+            'Neurologue',
+            'Cardiologue',
+            'Pneumologue',
+            'Kinésithérapeute',
+            'Orthopédiste',
+            'Médecin de réadaptation',
+            'Gériatre',
+            'Pédiatre',
+            'Chirurgien orthopédiste',
+            'Neurochirurgien',
+            'Médecin de la douleur',
+            'Oncologue',
+            'Endocrinologue',
+            'Psychiatre',
+            'Orthophoniste',
+            'Ergothérapeute',
+            'Podologue',
+            'Médecin du sport',
+            'Médecin généraliste',
+        ];
+
+        if ($pageName === Crud::PAGE_EDIT && in_array('ROLE_PROFESSIONNEL', $this->getContext()->getEntity()->getInstance()->getRoles())) {
+            $fields[] = ChoiceField::new('specialite')
+                ->setChoices(array_combine($specialite, $specialite))
+                ->setRequired(false)
+                ->allowMultipleChoices(false);
+        }
+
         return $fields;
     }
 
