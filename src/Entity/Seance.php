@@ -65,10 +65,12 @@ class Seance
 
     #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn(name: "patient_id", referencedColumnName: "id", nullable: false, onDelete: "CASCADE")]
+    #[Groups(['seance:read'])]
     private ?User $patient = null;
 
     #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn(name: "professionnel_id", referencedColumnName: "id", nullable: false, onDelete: "CASCADE")]
+    #[Groups(['seance:read'])]
     private ?User $professionnel = null;
 
     public function getId(): ?int

@@ -49,7 +49,6 @@ final class ProfessionnelController extends AbstractController
     #[Route('/api/professionnels/{id}/seances', name: 'get_professionnel_seances', methods: ['GET'])]
     public function getSeancesForProfessionnel(int $id, EntityManagerInterface $entityManager, SerializerInterface $serializer): JsonResponse
     {
-        // Récupérer le professionnel
         $professionnel = $entityManager->getRepository(Professionnel::class)->find($id);
 
         if (!$professionnel) {
@@ -58,10 +57,8 @@ final class ProfessionnelController extends AbstractController
             ], Response::HTTP_NOT_FOUND);
         }
 
-        // Obtenir les séances associées au professionnel
         $seances = $professionnel->getSeances();
 
-        // Serializer les séances
         $data = $serializer->normalize($seances, null, ['groups' => ['seance:read']]);
 
         return $this->json($data);
