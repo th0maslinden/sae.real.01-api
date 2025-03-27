@@ -33,6 +33,47 @@ class UserCrudController extends AbstractCrudController
             TextField::new('specialite')->onlyOnIndex(),
         ];
 
+        $pathologies = [
+            'Arthrose',
+            'Spondylarthrite ankylosante',
+            'Syndrome du canal carpien',
+            'Tendinopathies',
+            'Sclérose en plaques',
+            'Maladie de Parkinson',
+            'Syndrome de Guillain-Barré',
+            'Paralysie faciale',
+            'Rééducation post-infarctus',
+            'Insuffisance cardiaque',
+            'Artérite oblitérante des membres inférieurs',
+            'Broncho-pneumopathie chronique obstructive (BPCO)',
+            'Fibrose pulmonaire',
+            "Syndrome d'apnées du sommeil",
+            'Polyarthrite rhumatoïde',
+            'Lupus érythémateux disséminé',
+            'Fibromyalgie',
+            'Rééducation après chirurgie de la hanche ou du genou',
+            'Rééducation après chirurgie du rachis',
+            'Paralysie cérébrale',
+            'Scoliose idiopathique',
+            'Syndrome de pied bot',
+            'Ostéoporose avec fractures',
+            "Syndrome de déconditionnement à l'effort",
+            'Neuropathies diabétiques',
+            'Syndrome du défilé thoracique',
+            'Algoneurodystrophie',
+            'Syndrome douloureux régional complexe',
+            'Syndrome post-commotionnel',
+            'Rééducation après traumatisme crânien sévère',
+            'Rééducation post-cancer du sein',
+            'Rééducation après chirurgie pour tumeur cérébrale',
+        ];
+
+        if ($pageName === Crud::PAGE_EDIT && in_array('ROLE_PATIENT', $this->getContext()->getEntity()->getInstance()->getRoles())) {
+            $fields[] = ChoiceField::new('pathologie')
+                ->setChoices(array_combine($pathologies, $pathologies))
+                ->setRequired(false)
+                ->allowMultipleChoices(false);
+        }
 
         return $fields;
     }
