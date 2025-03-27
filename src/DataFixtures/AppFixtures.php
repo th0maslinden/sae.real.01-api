@@ -66,9 +66,5 @@ class AppFixtures extends Fixture
             'login' => 'admin',
         ]);
 
-        $manager->persist($patient);
-        $manager->persist($professionnel);
-        $manager->persist($admin);
-        $manager->flush();
     }
 }
