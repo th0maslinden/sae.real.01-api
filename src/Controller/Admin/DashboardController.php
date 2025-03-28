@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\Admin;
 use App\Entity\Patient;
 use App\Entity\Professionnel;
+use App\Entity\Seance;
 use App\Entity\User;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminDashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
@@ -51,7 +52,8 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
         yield MenuItem::linkToCrud('Users', 'fa fa-users', User::class);
         yield MenuItem::linkToCrud('Patients', 'fa fa-user', Patient::class);
-        yield MenuItem::linkToCrud('Professionnel', 'fa fa-user-nurse', Professionnel::class);
-        yield MenuItem::linkToCrud('Admin', 'fa-solid fa-address-card', Admin::class);
+        yield MenuItem::linkToCrud('Professionnels', 'fa fa-user-nurse', Professionnel::class);
+        yield MenuItem::linkToCrud('Admins', 'fa-solid fa-address-card', Admin::class);
+        yield MenuItem::linkToCrud('Seances', 'fa-solid fa-address-card', Seance::class);
     }
 }
