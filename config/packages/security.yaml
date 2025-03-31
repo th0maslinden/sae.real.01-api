@@ -43,6 +43,7 @@ security:
         - { path: ^/api/users/\d+$, roles: PUBLIC_ACCESS }
         - { path: ^/api/users/\d+/avatar, roles: PUBLIC_ACCESS }
         - { path: ^/api/, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/admin, roles: ROLE_ADMIN }
 
 when@test:
     security:
