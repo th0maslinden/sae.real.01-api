@@ -38,6 +38,13 @@ composer start
 ```
 composer test
 ```
-### Compte admin de test
+### Comptes de test
 
+#### Patient
+**login** : patient **pass** : test
+
+#### Professionnel
+**login** : pro **pass** : test
+
+#### Administrateur
 **login** : admin **pass** : test
