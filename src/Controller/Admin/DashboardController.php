@@ -54,6 +54,6 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Patients', 'fa fa-user', Patient::class);
         yield MenuItem::linkToCrud('Professionnels', 'fa fa-user-nurse', Professionnel::class);
         yield MenuItem::linkToCrud('Admins', 'fa-solid fa-address-card', Admin::class);
-        yield MenuItem::linkToCrud('Seances', 'fa-solid fa-address-card', Seance::class);
+        yield MenuItem::linkToCrud('Seances', 'fa-solid fa-business-time', Seance::class);
     }
 }
