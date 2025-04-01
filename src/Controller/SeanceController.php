@@ -36,6 +36,15 @@ final class SeanceController extends AbstractController
 
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }
+    #[Route('/api/seances/{id}', name: 'delete_seance', methods: ['DELETE'])]
+    public function deleteSeance(Seance $seance, EntityManagerInterface $entityManager): JsonResponse
+    {
+        $entityManager->remove($seance);
+        $entityManager->flush();
+
+        return new JsonResponse(null, Response::HTTP_NO_CONTENT);
+    }
+
 }
 
 
