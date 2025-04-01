@@ -133,7 +133,7 @@ class Seance
         return $this;
     }
 
-    public function getPatient(): User
+    public function getPatient(): ?User
     {
         return $this->patient;
     }
@@ -144,7 +144,7 @@ class Seance
         return $this;
     }
 
-    public function getProfessionnel(): User
+    public function getProfessionnel(): ?User
     {
         return $this->professionnel;
     }

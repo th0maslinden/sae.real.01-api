@@ -42,4 +42,9 @@ class Admin extends User
 
         return $this;
     }
+
+    public function __toString(): string
+    {
+        return $this->getLogin();
+    }
 }
