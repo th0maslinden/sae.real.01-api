@@ -2,36 +2,40 @@
 
 namespace App\Controller;
 
-use App\Repository\SeanceRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
+use App\Entity\Seance;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Serializer\SerializerInterface;
 
-class SeanceController extends AbstractController
+final class SeanceController extends AbstractController
 {
-    #[Route('/api/seances', name: 'api_seances', methods: ['GET'])]
-    public function getSeances(SeanceRepository $seanceRepository): JsonResponse
+    private $serializer;
+
+    public function __construct(SerializerInterface $serializer)
     {
-        $seances = $seanceRepository->findAll();
+        $this->serializer = $serializer;
+    }
 
-        $data = array_map(function ($seance) {
-            return [
-                'id' => $seance->getId(),
-                'raison' => $seance->getRaison(),
-                'date' => $seance->getDate(),
-                'heureDebut' => $seance->getHeureDebut(),
-                'heureFin' => $seance->getHeureFin(),
-                'patient' => [
-                    'firstname' => $seance->getPatient()->getFirstname(),
-                    'lastname' => $seance->getPatient()->getLastname(),
-                ],
-                'professionnel' => [
-                    'firstname' => $seance->getProfessionnel()->getFirstname(),
-                    'lastname' => $seance->getProfessionnel()->getLastname(),
-                ],
-            ];
-        }, $seances);
+    #[Route('/api/seances/{id}', name: 'update_seance', methods: ['PUT'])]
+    public function updateSeance(Request $request, Seance $seance, EntityManagerInterface $entityManager): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
 
-        return $this->json($data);
+        if (isset($data['start'])) {
+            $seance->setHeureDebut(new \DateTime($data['start']));
+        }
+        if (isset($data['end'])) {
+            $seance->setHeureFin(new \DateTime($data['end']));
+        }
+
+        $entityManager->flush();
+
+        return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }
 }
+
+
