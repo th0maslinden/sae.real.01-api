@@ -28,8 +28,6 @@ final class ProfessionnelController extends AbstractController
     {
         $search = $request->query->get('search', '');
 
-        $results = [];
-
         if (!empty($search)) {
             $results = $professionnelRepository->createQueryBuilder('p')
                 ->where('p.firstname LIKE :search')
@@ -37,6 +35,8 @@ final class ProfessionnelController extends AbstractController
                 ->setParameter('search', '%'.$search.'%')
                 ->getQuery()
                 ->getResult();
+        } else {
+            $results = $professionnelRepository->findAll();
         }
 
         $jsonContent = $this->serializer->serialize($results, 'json', [
