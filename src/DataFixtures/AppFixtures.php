@@ -13,10 +13,10 @@ class AppFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-        // Création de 10 patients
+        // Création de 20 patients
         $patients = PatientFactory::createMany(10);
 
-        // Création de 5 professionnels
+        // Création de 20 professionnels
         $professionnels = ProfessionnelFactory::createMany(5);
 
         // Chaque patient a au moins 2 séances
