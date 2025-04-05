@@ -44,7 +44,7 @@ class DashboardController extends AbstractDashboardController
     public function configureDashboard(): Dashboard
     {
         return Dashboard::new()
-            ->setTitle('Sae 4 Real 01 Api');
+            ->setTitle('<a href="http://localhost:5173/admin" style="text-decoration: none; color: inherit;">CHU Reims - Hôpital Sébastopol</a>');
     }
 
     public function configureMenuItems(): iterable
