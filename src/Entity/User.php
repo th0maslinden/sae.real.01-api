@@ -153,7 +153,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $avatar;
 
     #[ORM\Column(length: 100)]
-    #[Groups(['User_write', 'User_me'])]
+    #[Groups(['User_write', 'User_me', 'search_result'])]
     #[Assert\Email(
         message: 'The email {{ value }} is not a valid email.',
     )]

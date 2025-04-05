@@ -67,7 +67,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
         $email = strtolower(
             strtolower($normalizedFirstname).'.'.
             strtolower($normalizedLastname).
-            '@'.self::faker()->domainName
+            '@'.'chu-reims.fr'
         );
         $password = 'test';
 
