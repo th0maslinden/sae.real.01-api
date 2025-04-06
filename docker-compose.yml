@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  db:
+    image: mariadb:10.2.25
+    environment:
+      MYSQL_USER: lind0013
+      MYSQL_PASSWORD: lind0013
+      MYSQL_ROOT_PASSWORD: secretR00tPassw0rd
+      MYSQL_DATABASE: LIND0013_contact
+    volumes:
+      - db_data:/var/lib/mysql
+
+  php:
+    build:
+      context: .
+      target: contacts_php
+    depends_on:
+      - db
+    volumes:
+      - .:/symfony-contacts
+      - ./docker/php/conf.d/dev.ini:/usr/local/etc/php/conf.d/dev.ini
+
+  web:
+    build:
+      context: .
+      target: contacts_nginx
+    depends_on:
+      - php
+    volumes:
+      - ./public:/symfony-contacts/public:ro
+    ports:
+      - "8080:80"
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    links:
+      - db
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      MYSQL_ROOT_PASSWORD: secretR00tPassw0rd
+    ports:
+      - "8081:80"
+
+volumes:
+  db_data:
