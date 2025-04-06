@@ -48,3 +48,25 @@ composer test
 
 #### Administrateur
 **login** : admin **pass** : test
+
+### virtualisation
+erreur de connexion à la bd, aucune slution trouvé.
+Dupliquez le fichier `.env` en `.env.local` et éditez-le en modifiant la ligne de connexion en :
+```
+DATABASE_URL="mysql://lind0013:lind0013@db:3306/LIND0013_contact"
+```
+
+1. Créé la phase php : 
+```
+docker build --tag $USER/symfony-contacts --target contacts_php .
+```
+
+2. Créé la phase nginx : 
+```
+docker build --tag $USER/symfony-contacts-nginx --target contacts_nginx .
+```
+
+3. démarrer le serveur :
+```
+docker compose up --build
+```
