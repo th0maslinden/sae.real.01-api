@@ -14,6 +14,11 @@ Utilisation de Symfony Fixtures / Faker pour générer des données de test.
 
 Front-end partiellement développé avec React, consommant l’API pour afficher et manipuler les données.
 
+![](/public/readmeImages/Capture%20d’écran%202025-10-23%20160958.png)
+![](/public/readmeImages/Capture%20d’écran%202025-10-23%20161034.png)
+![](/public/readmeImages/Capture%20d’écran%202025-10-23%20161128.png)
+![](/public/readmeImages/Capture%20d’écran%202025-10-23%20161221.png)
+
 ## Auteurs 
 
 * **RAYAUME Hugo** - raya0006
