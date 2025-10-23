@@ -1,5 +1,19 @@
 # SAE-4.Real.01-API
 
+Application web développée dans le cadre d’un projet d’entraînement, visant à concevoir un site pour le CHU de Reims. Le projet est divisé en deux parties : une API (Symfony / API Platform) et une interface front-end (React).
+
+Fonctionnalités principales :
+
+Gestion des utilisateurs : rôles patient, médecin, administrateur.
+
+Gestion de planning : les médecins peuvent gérer leurs créneaux, les patients prendre rendez-vous.
+
+Interface d’administration avec EasyAdmin : possibilité pour les administrateurs de créer, modifier et supprimer toutes les entités.
+
+Utilisation de Symfony Fixtures / Faker pour générer des données de test.
+
+Front-end partiellement développé avec React, consommant l’API pour afficher et manipuler les données.
+
 ## Auteurs 
 
 * **RAYAUME Hugo** - raya0006
